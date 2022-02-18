@@ -19,6 +19,7 @@ public:
             TWCoinTypeBitcoin,
             TWCoinTypeBitcoinCash,
             TWCoinTypeBitcoinGold,
+            TWCoinTypeHydra,
             TWCoinTypeDash,
             TWCoinTypeDigiByte,
             TWCoinTypeDogecoin,

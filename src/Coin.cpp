@@ -143,6 +143,7 @@ CoinEntry* coinDispatcher(TWCoinType coinType) {
         case TWCoinTypeFilecoin: entry = &filecoinDP; break;
         case TWCoinTypeFIO: entry = &fioDP; break;
         case TWCoinTypeGroestlcoin: entry = &groestlcoinDP; break;
+        case TWCoinTypeHydra: entry = &bitcoinDP; break;
         case TWCoinTypeHarmony: entry = &harmonyDP; break;
         case TWCoinTypeICON: entry = &iconDP; break;
         case TWCoinTypeIoTeX: entry = &iotexDP; break;
