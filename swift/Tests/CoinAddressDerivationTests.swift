@@ -101,7 +101,7 @@ class CoinAddressDerivationTests: XCTestCase {
                     let expectedResult = "grs1qexwmshts5pdpeqglkl39zyl6693tmfwp0cue4j"
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .hydra:
-                    let expectedResult = "grs1qexwmshts5pdpeqglkl39zyl6693tmfwp0cue4j"
+                    let expectedResult = "HJxYFr21yhNS1NC8CpERHFjf5AfV94xg9N"
                     assertCoinDerivation(coin, expectedResult, derivedAddress, address)
                 case .harmony:
                     let expectedResult = "one12fk20wmvgypdkn59n4hq8e3aa5899xfx4vsu09"
