@@ -37,3 +37,4 @@ Result<Transaction, Common::Proto::SigningError> TransactionSigner<Transaction, 
 template class Bitcoin::TransactionSigner<Bitcoin::Transaction, TransactionBuilder>;
 template class Bitcoin::TransactionSigner<Zcash::Transaction, Zcash::TransactionBuilder>;
 template class Bitcoin::TransactionSigner<Groestlcoin::Transaction, TransactionBuilder>;
+template class Bitcoin::TransactionSigner<Bitcoin::Transaction, Hydra::TransactionBuilder>;
