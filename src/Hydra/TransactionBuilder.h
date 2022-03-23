@@ -34,7 +34,7 @@ public:
         coin = TWCoinTypeHydra;
         Transaction tx = Bitcoin::TransactionBuilder::build<Transaction>(plan, toAddress, changeAddress, coin, lockTime);
         if(plan.contract.size() > 0){
-            tx.outputs.push_back(new Bitcoin::TransactionOutput(plan.contract, 0))
+            tx.outputs.push_back(new Bitcoin::TransactionOutput(0,plan.contract))
         }
         
         return tx;
