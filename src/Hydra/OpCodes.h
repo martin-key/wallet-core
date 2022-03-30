@@ -5,7 +5,7 @@
 // file LICENSE at the root of the source code distribution tree.
 
 #pragma once
-
+namespace TW::Hydra {
 /** Script opcodes */
 enum OpCode
 {
@@ -165,3 +165,4 @@ enum OpCode
 
     OP_INVALIDOPCODE = 0xff,
 };
+}
