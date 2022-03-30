@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package TW.Hydra.Proto;
+option java_package = "wallet.core.jni.proto";
+
+import "Common.proto";
+
+message ContractInput {
+    // Transaction gas limit.
+    uint32 gasLimit = 1;
+
+    // The destination address.
+    string to = 2;
+
+    // Transaction amount.
+    uint32 amount = 3;
+
+    // The address of the contract on the blockchain.
+    string contractAddress = 4;
+}
