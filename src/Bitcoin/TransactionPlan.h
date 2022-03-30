@@ -8,6 +8,7 @@
 
 #include "Amount.h"
 #include "UTXO.h"
+#include "Script.h"
 #include "../Data.h"
 #include "../proto/Bitcoin.pb.h"
 
@@ -35,6 +36,9 @@ struct TransactionPlan {
 
     Data outputOpReturn;
 
+    // Hydra HRC20 transaction output
+    Script contract;
+
     Common::Proto::SigningError error = Common::Proto::SigningError::OK;
 
     TransactionPlan() = default;
@@ -47,6 +51,7 @@ struct TransactionPlan {
         , utxos(std::vector<UTXO>(plan.utxos().begin(), plan.utxos().end()))
         , branchId(plan.branch_id().begin(), plan.branch_id().end())
         , outputOpReturn(plan.output_op_return().begin(), plan.output_op_return().end())
+        , contract(Script())
         , error(plan.error())
     {}
 
