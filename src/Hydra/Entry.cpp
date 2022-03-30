@@ -6,18 +6,18 @@
 
 #include "Entry.h"
 
-#include "TAddress.h"
+#include "../Bitcoin/Address.h"
 #include "Signer.h"
 
 using namespace TW::Hydra;
 using namespace std;
 
 bool Entry::validateAddress(TWCoinType coin, const string& address, TW::byte p2pkh, TW::byte p2sh, const char* hrp) const {
-    return TAddress::isValid(address);
+    return Bitcoin::Address::isValid(address);
 }
 
 string Entry::deriveAddress(TWCoinType coin, const PublicKey& publicKey, TW::byte p2pkh, const char* hrp) const {
-    return TAddress(publicKey, p2pkh).string();
+    return Bitcoin::Address(publicKey, p2pkh).string();
 }
 
 void Entry::sign(TWCoinType coin, const TW::Data& dataIn, TW::Data& dataOut) const {

@@ -8,17 +8,16 @@
 #include "../proto/Hydra.pb.h"
 #include "../Data.h"
 #include "../Bitcoin/Script.h"
+
+
 namespace TW::Hydra {
 
-using SigningInput = Hydra::Proto::ContractInput;
+using ContractInput = Hydra::Proto::ContractInput;
 
 class TokenScriptBuilder {
   public:
-    Signer() = delete;
-
-
     /// Returns built token output
-    static TW::Bitcoin::Script buildTokenScript(const ContractInput& input)const;
+    static TW::Bitcoin::Script buildTokenScript(const ContractInput& input);
 
 };
 

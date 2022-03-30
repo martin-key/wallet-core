@@ -6,27 +6,30 @@
 
 #include "TokenScriptBuilder.h"
 #include "../Ethereum/RLP.h"
-#include "./Opcodes.h"
+#include "OpCodes.h"
+#include "../Ethereum/Transaction.h"
 
+using namespace TW;
+using namespace TW::Hydra;
 
-TW::Bitcoin::Script TokenScriptBuilder::buildTokenScript(const ContractInput& input) const{
+TW::Bitcoin::Script TokenScriptBuilder::buildTokenScript(const ContractInput& input) {
     //Build the transaction
     Data script;
     
     //Append ops_4
-    append(script, TW::Ethereum::RLP::encode(OpCode::OP_4));
+    append(script, TW::Ethereum::RLP::encode(TW::Hydra::OpCode::OP_4));
     
     //Append gasLimit
-    append(script, TW::Ethereum::RLP::encode(input.gasLimit));
+    append(script, TW::Ethereum::RLP::encode(input.gaslimit()));
     
     //Append built function
-    append(script, TW::Ethereum::buildERC20TransferCall(input.to, input.amount));
+    append(script, TW::Ethereum::TransactionNonTyped::buildERC20TransferCall(TW::Ethereum::RLP::encode(input.to()), input.amount()));
 
     //Append contract address
-    append(script, TW::Ethereum::RLP::encode(input.contractAddress));
+    append(script, TW::Ethereum::RLP::encode(input.contractaddress()));
     
     //Append op_call
-    append(script, TW::Ethereum::RLP::encode(OpCode::OP_CALL));
+    append(script, TW::Ethereum::RLP::encode(TW::Hydra::OpCode::OP_CALL));
 
     return TW::Bitcoin::Script(script);
 }

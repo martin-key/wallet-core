@@ -11,9 +11,10 @@
 #include "../Groestlcoin/Transaction.h"
 #include "../Zcash/Transaction.h"
 #include "../Zcash/TransactionBuilder.h"
+#include "../Hydra/TransactionBuilder.h"
 
 using namespace TW;
-using namespace TW::Bitcoin;
+using namespace Bitcoin;
 
 template <typename Transaction, typename TransactionBuilder>
 TransactionPlan TransactionSigner<Transaction, TransactionBuilder>::plan(const SigningInput& input) {

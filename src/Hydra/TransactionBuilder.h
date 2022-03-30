@@ -6,10 +6,9 @@
 
 #pragma once
 
-#include "SigningInput.h"
-#include "Transaction.h"
-#include "TransactionPlan.h"
-#include "InputSelector.h"
+#include "../Bitcoin/SigningInput.h"
+#include "../Bitcoin/Transaction.h"
+#include "../Bitcoin/InputSelector.h"
 #include "../proto/Bitcoin.pb.h"
 #include <TrustWalletCore/TWCoinType.h>
 
@@ -21,7 +20,7 @@ namespace TW::Hydra {
 class TransactionBuilder {
 public:
     /// Plans a transaction by selecting UTXOs and calculating fees.
-    static TransactionPlan plan(const SigningInput& input){
+    static Bitcoin::TransactionPlan plan(const Bitcoin::SigningInput& input){
         auto plan = Bitcoin::TransactionBuilder::plan(input);
         plan.contract = input.scripts.at("contract");
         return plan;
@@ -29,12 +28,12 @@ public:
 
     /// Builds a transaction with the selected input UTXOs, and one main output and an optional change output.
     template <typename Transaction>
-    static Transaction build(const TransactionPlan& plan, const std::string& toAddress,
+    static Bitcoin::Transaction build(const Bitcoin::TransactionPlan& plan, const std::string& toAddress,
                              const std::string& changeAddress, enum TWCoinType coin, uint32_t lockTime) {        
         coin = TWCoinTypeHydra;
-        Transaction tx = Bitcoin::TransactionBuilder::build<Transaction>(plan, toAddress, changeAddress, coin, lockTime);
-        if(plan.contract.size() > 0){
-            tx.outputs.push_back(new Bitcoin::TransactionOutput(0,plan.contract))
+        Transaction tx = Bitcoin::TransactionBuilder::build<Bitcoin::Transaction>(plan, toAddress, changeAddress, coin, lockTime);
+        if(plan.contract.bytes.size() > 0){
+            tx.outputs.push_back(Bitcoin::TransactionOutput(0,plan.contract));
         }
         
         return tx;

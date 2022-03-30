@@ -11,6 +11,7 @@ namespace TW::Hydra {
 
 using SigningInput = Bitcoin::Proto::SigningInput;
 using SigningOutput = Bitcoin::Proto::SigningOutput;
+using TransactionPlan = Bitcoin::Proto::TransactionPlan;
 
 class Signer {
   public:
