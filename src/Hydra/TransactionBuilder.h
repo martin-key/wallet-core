@@ -8,6 +8,7 @@
 
 #include "../Bitcoin/SigningInput.h"
 #include "../Bitcoin/Transaction.h"
+#include "../Bitcoin/TransactionBuilder.h"
 #include "../Bitcoin/InputSelector.h"
 #include "../proto/Bitcoin.pb.h"
 #include <TrustWalletCore/TWCoinType.h>
@@ -22,7 +23,9 @@ public:
     /// Plans a transaction by selecting UTXOs and calculating fees.
     static Bitcoin::TransactionPlan plan(const Bitcoin::SigningInput& input){
         auto plan = Bitcoin::TransactionBuilder::plan(input);
-        plan.contract = input.scripts.at("contract");
+        if(!input.scripts.empty()){
+            plan.contract = input.scripts.at("contract");
+        }
         return plan;
     }
 
