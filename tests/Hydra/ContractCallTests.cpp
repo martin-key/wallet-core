@@ -9,19 +9,19 @@
 //
 
 #include "../interface/TWTestUtilities.h"
-#include <gtest/gtest.h>
-#include "Hydra/TokenScriptBuilder.h"
-#include "HexCoding.h"
-#include "ComparisonHelper.h"
-#include<vector>
-#include<map>
+#include "../Bitcoin/TxComparisonHelper.h"
+#include "Hydra/TransactionBuilder.h"
 #include "Bitcoin/TransactionInput.h"
 #include "Bitcoin/Transaction.h"
-#include "Bitcoin/SigningInput.h"
+#include "Bitcoin/SegwitAddress.h"
+#include "Bitcoin/TransactionSigner.cpp"
 #include "Data.h"
 #include "PrivateKey.h"
-#include "Hydra/TransactionBuilder.h"
+#include "ComparisonHelper.h"
 
+#include <gtest/gtest.h>
+#include<vector>
+#include<map>
 
 using namespace TW;
 TEST(Hydra, ContractTokenScript){
@@ -35,51 +35,69 @@ TEST(Hydra, ContractTokenScript){
     }
 }
 
+TEST(Hydra, TestTransactionPlanBuilding){
+    std::vector<int64_t> amounts = {200, 300, 800, 1000};
+    auto utxos = buildTestHydraUTXOs(amounts);
+    auto signingInput = buildHydraSigningInput(100, 1, utxos, false, TWCoinTypeHydra);
+
+    std::map<std::string, Bitcoin::Script> scripts = {{"contract", buildTokenScript(1000, "HPjtxTZwy8i4emXxb64hz82x3s6q48LbGz", 10, "4ab26aaa1803daa638910d71075c06386e391147")}};
+    signingInput.scripts = scripts;
+
+    auto plan = Hydra::TransactionBuilder::plan(signingInput);
+    
+    {
+
+       ASSERT_EQ(plan.utxos.size(), 1);
+       ASSERT_EQ(hexEncoded(plan.contract.bytes), "0x548203e8a9059cbb0000000000000000000000005878623634687a3832783373367134384c62477a000000000000000000000000000000000000000000000000000000000000000aa83461623236616161313830336461613633383931306437313037356330363338366533393131343781c2");
+    }
+}
+
 TEST(Hydra, TestTransactionBuilder){
-    auto po0 = TW::Bitcoin::OutPoint(parse_hex("94be46260220bce2872e3ad69f4b7828792a3db0a6f460a8e956d6ea379b011d"), 1);
-    auto po1 = TW::Bitcoin::OutPoint(parse_hex("7435b2e54bc8e1b0312cc721aaa321df3db59ea721db13188abb8787c1c30257"), 1);
     
-    auto privateKey = TW::PrivateKey(parse_hex("7fdafb9db5bc501f2096e7d13d331dc7a75d9594af3d251313ba8b6200f4e384"));
-    
-    Bitcoin::UTXOs utxos;
-    Bitcoin::UTXO utxo0;
-    Bitcoin::UTXO utxo1;
-    utxo0.outPoint = po0;
-    utxo0.script = Bitcoin::Script();
-    utxo0.amount = 12545182455;
+    std::vector<int64_t> amounts = {12545182455, 19152684041};
+    auto utxos = buildTestHydraUTXOs(amounts);
+    auto signingInput = buildHydraSigningInput(1, 3600, utxos, false, TWCoinTypeHydra);
 
-    utxo1.outPoint = po1;
-    utxo1.script = Bitcoin::Script();
-    utxo1.amount = 19152684041;
-    utxos.push_back(utxo0);
-    utxos.push_back(utxo1); 
+    std::map<std::string, Bitcoin::Script> scripts = {{"contract", buildTokenScript(1000, "HPjtxTZwy8i4emXxb64hz82x3s6q48LbGz", 10, "4ab26aaa1803daa638910d71075c06386e391147")}};
+    signingInput.scripts = scripts;
 
-    Bitcoin::SigningInput input;
-    input.amount = 10000000000;
-    input.changeAddress = "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg";
-    input.coinType = TWCoinTypeHydra;
-    input.toAddress = "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg";
-    input.hashType = TWBitcoinSigHashTypeAll;
-    input.byteFee = 3600;
-    input.utxos = utxos;
-    input.privateKeys = std::vector<TW::PrivateKey>({privateKey});
+    auto plan = Hydra::TransactionBuilder::plan(signingInput);
 
-    // std::map<std::string, Bitcoin::Script> scripts = {{"contract", buildTokenScript(1000, "HPjtxTZwy8i4emXxb64hz82x3s6q48LbGz", 10, "4ab26aaa1803daa638910d71075c06386e391147")}};
-    // input.scripts = scripts;
-
-    auto plan = Hydra::TransactionBuilder::plan(input);
-
-    auto transaction = Hydra::TransactionBuilder::build<Bitcoin::Transaction>(plan, "HFsP8t3JwkUUUiqijMfGnWwtxc8wNvL92b", "HFsP8t3JwkUUUiqijMfGnWwtxc8wNvL92a", TWCoinTypeHydra,0);
+    auto transaction = Hydra::TransactionBuilder::build<Bitcoin::Transaction>(plan, "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg", "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg", TWCoinTypeHydra,0);
     
     
     {
-        ASSERT_EQ(plan.amount, 10000000000);
-        ASSERT_EQ(plan.change, 9151870441);
+        ASSERT_EQ(plan.amount, 1);
+        ASSERT_EQ(plan.change, 12544368854);
         ASSERT_EQ(plan.fee, 813600);
         ASSERT_EQ(plan.utxos.size(), 1);
-        ASSERT_EQ(transaction.outputs.size(), 3);
+        ASSERT_EQ(transaction.outputs.size(), 3); /* One output for the transction fee, one for the change and one for the contract call */
 
     }
     
+}
+
+TEST(Hydra, TestTransactionSigner){
+    std::vector<int64_t> amounts = {12545182455, 19152684041};
+    auto utxos = buildTestHydraUTXOs(amounts);
+    auto signingInput = buildHydraSigningInput(1, 3600, utxos, false, TWCoinTypeHydra);
+
+    std::map<std::string, Bitcoin::Script> scripts = {{"contract", buildTokenScript(1000, "HPjtxTZwy8i4emXxb64hz82x3s6q48LbGz", 10, "4ab26aaa1803daa638910d71075c06386e391147")}};
+    signingInput.scripts = scripts;
+
+    auto plan = Hydra::TransactionBuilder::plan(signingInput);
+    
+
+    //Sign
+    auto result = Bitcoin::TransactionSigner<Bitcoin::Transaction, Hydra::TransactionBuilder>::sign(signingInput);
+    std::cout << result.error() << std::endl;
+
+    ASSERT_TRUE(result.isSuccess());
+    auto signedTx = result.payload();
+
+    Data serialized;
+    signedTx.encode(serialized);
+    EXPECT_EQ(getEncodedTxSize(signedTx), (EncodedTxSize{350, 240, 268}));
+    ASSERT_EQ(hex(serialized),"0100000000010100000000000000000000000000000000000000000000000000000000000000000000000000ffffffff0301000000000000001976a91452ba7d3234ce242b1727b5d301125ab2cc0a3e1288acd6e0b3eb0200000016001422e6014ad3631f1939281c3625bc98db808fbfb0000000000000000073548203e8a9059cbb0000000000000000000000005878623634687a3832783373367134384c62477a000000000000000000000000000000000000000000000000000000000000000aa83461623236616161313830336461613633383931306437313037356330363338366533393131343781c2024830450221008f003dbf345d1127e723d748351b4aa5311fdaf3f8b7699877bed373a29cba8102201adf9842010ecd0eda5163f0bc6146e23c50e8db783662e079167d07a0e8b2d40121025cf26d221b01ca4d6040893b96f1dabfd2a108d449b3fa62854421f98a42562b00000000");
 }
 
