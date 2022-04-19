@@ -28,6 +28,7 @@
 #include "Filecoin/Entry.h"
 #include "Groestlcoin/Entry.h"
 #include "Harmony/Entry.h"
+#include "Hydra/Entry.h"
 #include "Icon/Entry.h"
 #include "IoTeX/Entry.h"
 #include "Kusama/Entry.h"
@@ -74,6 +75,7 @@ Filecoin::Entry filecoinDP;
 FIO::Entry fioDP;
 Groestlcoin::Entry groestlcoinDP;
 Harmony::Entry harmonyDP;
+Hydra::Entry hydraDP;
 Icon::Entry iconDP;
 IoTeX::Entry iotexDP;
 Kusama::Entry kusamaDP;
@@ -143,7 +145,7 @@ CoinEntry* coinDispatcher(TWCoinType coinType) {
         case TWCoinTypeFilecoin: entry = &filecoinDP; break;
         case TWCoinTypeFIO: entry = &fioDP; break;
         case TWCoinTypeGroestlcoin: entry = &groestlcoinDP; break;
-        case TWCoinTypeHydra: entry = &bitcoinDP; break;
+        case TWCoinTypeHydra: entry = &hydraDP; break;
         case TWCoinTypeHarmony: entry = &harmonyDP; break;
         case TWCoinTypeICON: entry = &iconDP; break;
         case TWCoinTypeIoTeX: entry = &iotexDP; break;
