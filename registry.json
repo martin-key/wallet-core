@@ -1056,7 +1056,7 @@
     "symbol": "HYDRA",
     "decimals": 8,
     "blockchain": "Bitcoin",
-    "derivationPath": "m/44'/609'/0'/0/0",
+    "derivationPath": "m/88'/0'/0'",
     "curve": "secp256k1",
     "publicKeyType": "secp256k1",
     "p2pkhPrefix": 40,
