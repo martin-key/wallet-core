@@ -46,7 +46,7 @@ class CoinAddressDerivationTests {
         ETHEREUMCLASSIC -> assertEquals("0x078bA3228F3E6C08bEEac9A005de0b7e7089aD1c", address)
         GOCHAIN -> assertEquals("0x5940ce4A14210d4Ccd0ac206CE92F21828016aC2", address)
         GROESTLCOIN -> assertEquals("grs1qexwmshts5pdpeqglkl39zyl6693tmfwp0cue4j", address)
-        HYDRA -> assertEquals("HJxYFr21yhNS1NC8CpERHFjf5AfV94xg9N", address)
+        HYDRA -> assertEquals("HJgki9Dc75o1Wjj2hCn7XgTLPN7awU81t4", address)
         ICON -> assertEquals("hx18b380b53c23dc4ee9f6666bc20d1be02f3fe106", address)
         LITECOIN -> assertEquals("ltc1qhd8fxxp2dx3vsmpac43z6ev0kllm4n53t5sk0u", address)
         ONTOLOGY -> assertEquals("AHKTnybvnWo3TeY8uvNXekvYxMrXogUjeT", address)
