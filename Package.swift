@@ -5,19 +5,19 @@ let package = Package(
     name: "WalletCore",
     platforms: [.iOS(.v13)],
     products: [
-        .library(name: "WalletCore", targets: ["WalletCore", "SwiftProtobuf]),
+        .library(name: "WalletCore", targets: ["WalletCore", "SwiftProtobuf"]),
     ],
     dependencies: [],
     targets: [
         .binaryTarget(
             name: "WalletCore",
-            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.38/WalletCore.xcframework.zip",
-            checksum: "5e0ce96b1d39855f5b34a75d6810174448f83e6b976e32ceb2f8b62a4db988e5"
+            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.39/WalletCore.xcframework.zip",
+            checksum: "4a79312747c64edde6191712c67d91d2fd9323f18b66115d487173f600041e43"
         ),
         .binaryTarget(
             name: "SwiftProtobuf",
-            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.38/SwiftProtobuf.xcframework.zip",
-            checksum: "edc7f4b1c5ee9cc95b98a713b1430f7b9808348ebc9299be784a61821426ada3"
+            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.39/SwiftProtobuf.xcframework.zip",
+            checksum: "7072a8af78f0dac3228ddb71c7f312128a209c0ce4962817943702291436a5e1"
         )
     ]
 )
