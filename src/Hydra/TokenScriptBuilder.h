@@ -24,6 +24,6 @@ class TokenScriptBuilder {
 } // namespace TW::Hydra
 
 //Wrapper for C interface
-struct TWHydraTokenScript {
+struct TWHydraTokenScriptBuilder {
   TW::Hydra::TokenScriptBuilder impl;
 };
