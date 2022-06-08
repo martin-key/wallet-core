@@ -7,14 +7,16 @@
 #pragma once
 
 #include "TWBase.h"
-#include "TWBitcoinScript.h"
 #include "TWData.h"
+#include "TWBitcoinScript.h"
 
 TW_EXTERN_C_BEGIN
 
 TW_EXPORT_CLASS
-struct TWHydraTokenScriptBuilder;
+struct TWHydraTokenScript;
 
-/// Creates an empty script.
 TW_EXPORT_STATIC_METHOD
-struct TWBitcoinScript *_Nonnull TWHydraTokenScriptBuilderBuildTokenScript(TWData *_Nonnull input);
+struct TWBitcoinScript *_Nonnull TWHydraTokenScriptBuildTokenScript(TWData *_Nonnull input);
+
+
+TW_EXTERN_C_END

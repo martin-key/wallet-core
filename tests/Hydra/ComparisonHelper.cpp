@@ -10,24 +10,27 @@
 
 #include "Bitcoin/OutPoint.h"
 #include "proto/Bitcoin.pb.h"
+#include "proto/Hydra.pb.h"
 #include "Data.h"
 #include "PrivateKey.h"
 #include "HexCoding.h"
 #include "BinaryCoding.h"
 
 #include <cassert>
+#include <vector>
 
 
 
 Bitcoin::Script buildTokenScript(uint32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress){
-    Hydra::Proto::ContractInput input;
+    auto input = Hydra::Proto::ContractInput();
 
     input.set_gaslimit(gasLimit);
     input.set_to(toAddress);
     input.set_amount(amount);
     input.set_contractaddress(contractAddress);
-
-    return Hydra::TokenScriptBuilder::buildTokenScript(input);
+    std::string inputAsString = input.SerializeAsString();
+    Data inputData =std::vector<byte>(inputAsString.begin(), inputAsString.end());
+    return Hydra::TokenScript::buildTokenScript(inputData);
 
 }
 

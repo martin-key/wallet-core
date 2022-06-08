@@ -7,7 +7,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include "Hydra/TokenScriptBuilder.h"
+#include "Hydra/TokenScript.h"
 #include "HexCoding.h"
 #include "Bitcoin/Script.h"
 #include "Bitcoin/Transaction.h"

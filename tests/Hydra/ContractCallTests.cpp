@@ -24,16 +24,7 @@
 #include<map>
 
 using namespace TW;
-TEST(Hydra, ContractTokenScript){
 
-    auto res = buildTokenScript(1000, "HPjtxTZwy8i4emXxb64hz82x3s6q48LbGz", 10, "4ab26aaa1803daa638910d71075c06386e391147");
-
-    std::string expected = "0x548203e8a9059cbb0000000000000000000000005878623634687a3832783373367134384c62477a000000000000000000000000000000000000000000000000000000000000000aa83461623236616161313830336461613633383931306437313037356330363338366533393131343781c2";
-
-    {
-        ASSERT_EQ(hexEncoded(res.bytes), expected);
-    }
-}
 
 TEST(Hydra, TestTransactionPlanBuilding){
     std::vector<int64_t> amounts = {200, 300, 800, 1000};
