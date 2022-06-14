@@ -6,22 +6,20 @@
 
 #pragma once
 #include "../proto/Bitcoin.pb.h"
+#include "../proto/Hydra.pb.h"
 
 namespace TW::Hydra {
 
-using SigningInput = Bitcoin::Proto::SigningInput;
-using SigningOutput = Bitcoin::Proto::SigningOutput;
-using TransactionPlan = Bitcoin::Proto::TransactionPlan;
 
 class Signer {
   public:
     Signer() = delete;
 
     /// Returns a transaction plan (utxo selection, fee estimation)
-    static TransactionPlan plan(const SigningInput& input) noexcept;
+    static Bitcoin::Proto::TransactionPlan plan(const Hydra::Proto::SigningInput& input) noexcept;
 
     /// Signs a Proto::SigningInput transaction
-    static SigningOutput sign(const SigningInput& input) noexcept;
+    static Bitcoin::Proto::SigningOutput sign(const Hydra::Proto::SigningInput& input) noexcept;
 };
 
 } // namespace TW::Hydra

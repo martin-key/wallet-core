@@ -10,7 +10,8 @@
 #include "../Bitcoin/Transaction.h"
 #include "../Bitcoin/TransactionBuilder.h"
 #include "../Bitcoin/InputSelector.h"
-#include "../proto/Bitcoin.pb.h"
+#include "SigningInput.h"
+#include "TokenScript.h"
 #include <TrustWalletCore/TWCoinType.h>
 
 #include <optional>
@@ -21,23 +22,37 @@ namespace TW::Hydra {
 class TransactionBuilder {
 public:
     /// Plans a transaction by selecting UTXOs and calculating fees.
-    static Bitcoin::TransactionPlan plan(const Bitcoin::SigningInput& input){
-        auto plan = Bitcoin::TransactionBuilder::plan(input);
-        if(!input.scripts.empty()){
-            plan.contract = input.scripts.at("contract");
-        }
-        return plan;
-    }
-
+    static Bitcoin::TransactionPlan plan(const TW::Hydra::SigningInput& input);
     /// Builds a transaction with the selected input UTXOs, and one main output and an optional change output.
     template <typename Transaction>
     static Bitcoin::Transaction build(const Bitcoin::TransactionPlan& plan, const std::string& toAddress,
                              const std::string& changeAddress, enum TWCoinType coin, uint32_t lockTime) {        
         coin = TWCoinTypeHydra;
-        Transaction tx = Bitcoin::TransactionBuilder::build<Bitcoin::Transaction>(plan, toAddress, changeAddress, coin, lockTime);
+        Transaction tx;
+
         if(plan.contract.bytes.size() > 0){
+            if (plan.change > 0) {
+                auto outputChange = Bitcoin::TransactionBuilder::prepareOutputWithScript(changeAddress, plan.change, coin);
+                if (!outputChange.has_value()) { return {}; }
+                tx.outputs.push_back(outputChange.value());
+            }
+
+            const auto emptyScript = Bitcoin::Script();
+            for (auto& utxo : plan.utxos) {
+                tx.inputs.emplace_back(utxo.outPoint, emptyScript, utxo.outPoint.sequence);
+            }
+
+            // Optional OP_RETURN output
+            if (plan.outputOpReturn.size() > 0) {
+                auto lockingScriptOpReturn = Bitcoin::Script::buildOpReturnScript(plan.outputOpReturn);
+                tx.outputs.push_back(Bitcoin::TransactionOutput(0, lockingScriptOpReturn));
+            }
             tx.outputs.push_back(Bitcoin::TransactionOutput(0,plan.contract));
+
+        }else{
+            tx = Bitcoin::TransactionBuilder::build<Bitcoin::Transaction>(plan, toAddress, changeAddress, coin, lockTime);
         }
+        
         
         return tx;
     }

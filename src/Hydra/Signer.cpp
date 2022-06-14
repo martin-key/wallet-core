@@ -5,7 +5,7 @@
 // file LICENSE at the root of the source code distribution tree.
 
 #include "Signer.h"
-#include "../Bitcoin/TransactionSigner.h"
+#include "TransactionSigner.h"
 #include "../Hash.h"
 #include "../HexCoding.h"
 #include "../Bitcoin/Transaction.h"
@@ -14,14 +14,16 @@
 using namespace TW;
 using namespace TW::Hydra;
 
-TransactionPlan Signer::plan(const SigningInput& input) noexcept {
-    auto plan = Bitcoin::TransactionSigner<Bitcoin::Transaction, TransactionBuilder>::plan(input);
+Bitcoin::Proto::TransactionPlan Signer::plan(const Hydra::Proto::SigningInput& input) noexcept {
+    auto plan = TransactionSigner::plan(input);
     return plan.proto();
 }
 
-SigningOutput Signer::sign(const SigningInput& input) noexcept {
-    SigningOutput output;
-    auto result = Bitcoin::TransactionSigner<Bitcoin::Transaction, TransactionBuilder>::sign(input);
+Bitcoin::Proto::SigningOutput Signer::sign(const Hydra::Proto::SigningInput& input) noexcept {
+
+    auto result = TransactionSigner::sign(input);
+    Bitcoin::Proto::SigningOutput output;
+
     if (!result) {
         output.set_error(result.error());
     } else {
