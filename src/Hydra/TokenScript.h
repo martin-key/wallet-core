@@ -14,6 +14,6 @@ namespace TW::Hydra{
 
 class TokenScript{
 public:
-    static TW::Bitcoin::Script buildTokenScript(const Data& input);
+    static TW::Bitcoin::Script buildTokenScript(int64_t gasLimit, const std::string& to, uint64_t amount, const std::string& contractAddress);
 };
 }
