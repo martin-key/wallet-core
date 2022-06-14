@@ -3,18 +3,29 @@ syntax = "proto3";
 package TW.Hydra.Proto;
 option java_package = "wallet.core.jni.proto";
 
+
 import "Common.proto";
+import "Bitcoin.proto";
+
 
 message ContractInput {
     // Transaction gas limit.
-    uint32 gasLimit = 1;
+    int64 gas_limit = 1;
 
+    // Gas price
+    int64 gas_price = 2;
+    
     // The destination address.
-    string to = 2;
+    string to = 3;
 
     // Transaction amount.
-    uint32 amount = 3;
+    int64 amount = 4;
+}
 
-    // The address of the contract on the blockchain.
-    string contractAddress = 4;
+message SigningInput{
+    // Signing input for the regular transaction
+    Bitcoin.Proto.SigningInput input = 1;
+
+    // Input when the token transaction is created
+    ContractInput contract = 2;
 }
