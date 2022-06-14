@@ -88,6 +88,7 @@ class AnyAddress {
         case TWCoinTypeDogecoin:
         case TWCoinTypeMonacoin:
         case TWCoinTypeQtum:
+        case TWCoinTypeHydra:
         case TWCoinTypeRavencoin:
         case TWCoinTypeFiro: {
             auto addr = Bitcoin::Address(string);
