@@ -21,20 +21,11 @@
 
 
 
-Bitcoin::Script buildTokenScript(uint32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress){
-    auto input = Hydra::Proto::ContractInput();
-
-    input.set_gaslimit(gasLimit);
-    input.set_to(toAddress);
-    input.set_amount(amount);
-    input.set_contractaddress(contractAddress);
-    std::string inputAsString = input.SerializeAsString();
-    Data inputData =std::vector<byte>(inputAsString.begin(), inputAsString.end());
-    return Hydra::TokenScript::buildTokenScript(inputData);
-
+Bitcoin::Script buildTokenScript(int32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress){
+    return Hydra::TokenScript::buildTokenScript(gasLimit, toAddress, amount, contractAddress);
 }
 
-auto emptyHydraTxOutPoint = Bitcoin::OutPoint(parse_hex("hc1qytnqzjknvv03jwfgrsmzt0ycmwqgl0asx9rjk6"), 0);
+auto emptyHydraTxOutPoint = Bitcoin::OutPoint(parse_hex("df60e3babacfce81c9efcb268c14a7d33efe567b"), 0);
 
 Bitcoin::UTXO buildTestHydraUTXO(int64_t amount) {
     Bitcoin::UTXO utxo;
@@ -42,6 +33,7 @@ Bitcoin::UTXO buildTestHydraUTXO(int64_t amount) {
     utxo.outPoint = emptyHydraTxOutPoint;
     utxo.outPoint.sequence = UINT32_MAX;
     utxo.script = Bitcoin::Script::lockScriptForAddress("hc1qytnqzjknvv03jwfgrsmzt0ycmwqgl0asx9rjk6", TWCoinTypeHydra);
+    
     return utxo;
 }
 
@@ -53,7 +45,7 @@ Bitcoin::UTXOs buildTestHydraUTXOs(const std::vector<int64_t>& amounts) {
     return utxos;
 }
 
-Bitcoin::SigningInput buildHydraSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, bool useMaxAmount, enum TWCoinType coin) {
+Bitcoin::SigningInput buildBitcoinSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, bool useMaxAmount, enum TWCoinType coin) {
     Bitcoin::SigningInput input;
     input.amount = amount;
     input.byteFee = byteFee;
@@ -65,15 +57,27 @@ Bitcoin::SigningInput buildHydraSigningInput(Bitcoin::Amount amount, int byteFee
     input.privateKeys.push_back(privateKey);
 
     input.utxos = utxos;
-    input.toAddress = "HE4ZCZU2ymUir46JxGjnaauNtkWpmKpCcX";
+    input.toAddress = "HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq";
     input.changeAddress = "hc1qytnqzjknvv03jwfgrsmzt0ycmwqgl0asx9rjk6";
+
+    return input;
+}
+
+Hydra::ContractInput  buildHydraContractInput(Bitcoin::Amount gasLimit, Bitcoin::Amount gasPrice, const std::string& to, Bitcoin::Amount amount){
+    Hydra::ContractInput input;
+    input.gasLimit = gasLimit;
+    input.gasPrice = gasPrice;
+    input.to = to;
+    input.amount = amount;
+
     return input;
 }
 
 int64_t sumHydraUTXOs(const Bitcoin::UTXOs& utxos) {
-    int64_t s = 0u;
+    int64_t s = 0;
     for (auto& utxo: utxos) {
         s += utxo.amount;
     }
     return s;
 }
+

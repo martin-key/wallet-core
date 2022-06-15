@@ -13,9 +13,11 @@
 #include "Bitcoin/Transaction.h"
 #include "Bitcoin/UTXO.h"
 #include "Bitcoin/SigningInput.h"
+#include "Hydra/SigningInput.h"
 
 using namespace TW;
-Bitcoin::Script buildTokenScript(uint32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress);
+
+Bitcoin::Script buildTokenScript(int32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress);
 
 /// Build a dummy UTXO with the given amount
 Bitcoin::UTXO buildTestHydraUTXO(int64_t amount);
@@ -23,5 +25,8 @@ Bitcoin::UTXO buildTestHydraUTXO(int64_t amount);
 /// Build a set of dummy UTXO with the given amounts
 Bitcoin::UTXOs buildTestHydraUTXOs(const std::vector<int64_t>& amounts);
 
-Bitcoin::SigningInput buildHydraSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, 
+Bitcoin::SigningInput buildBitcoinSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, 
 bool useMaxAmount = false, enum TWCoinType coin = TWCoinTypeBitcoin);
+
+Hydra::ContractInput buildHydraContractInput(Bitcoin::Amount gasLimit, Bitcoin::Amount gasPrice, const std::string& to, Bitcoin::Amount amount);
+
