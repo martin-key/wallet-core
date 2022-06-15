@@ -1,7 +1,6 @@
 #include "TransactionBuilder.h"
 #include "TransactionSigner.h"
 
-#include "../Bitcoin/SigningInput.h"
 #include "Data.h"
 #include "../Coin.h"
 #include "../proto/Hydra.pb.h"
@@ -73,7 +72,7 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
 
     bool isTokenTransaction = false;
 
-    if(contract.amount != 0){
+    if(contract.to != ""){
         isTokenTransaction = true;
         plan.contract = TokenScript::buildTokenScript(contract.gasLimit, contract.to, contract.amount ,input.toAddress);
     }
@@ -148,12 +147,7 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
             }
         }
     }
-    assert(plan.change >= 0 && plan.change <= plan.availableAmount);
-
-    assert(plan.amount + plan.change + plan.fee == plan.availableAmount);
-
     return plan;
-
 }
 
 }
