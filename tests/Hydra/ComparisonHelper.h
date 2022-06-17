@@ -26,7 +26,7 @@ Bitcoin::UTXO buildTestHydraUTXO(int64_t amount);
 Bitcoin::UTXOs buildTestHydraUTXOs(const std::vector<int64_t>& amounts);
 
 Bitcoin::SigningInput buildBitcoinSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, 
-bool useMaxAmount = false, enum TWCoinType coin = TWCoinTypeBitcoin);
+bool useMaxAmount = false, enum TWCoinType coin = TWCoinTypeBitcoin, std::string toAddress = "HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq");
 
 Hydra::ContractInput buildHydraContractInput(Bitcoin::Amount gasLimit, Bitcoin::Amount gasPrice, const std::string& to, Bitcoin::Amount amount);
 

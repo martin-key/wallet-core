@@ -43,7 +43,7 @@ TEST(Hydra, TestRegularTransactionPlanBuilding){
 TEST(Hydra, TestTokenTransactionPlanBuilding){
     std::vector<int64_t> amounts = {20000000, 3000000, 8000000, 10000000};
     auto utxos = buildTestHydraUTXOs(amounts);
-    auto bitcoinSigningInput = buildBitcoinSigningInput(100, 58, utxos, false, TWCoinTypeHydra);
+    auto bitcoinSigningInput = buildBitcoinSigningInput(100, 58, utxos, false, TWCoinTypeHydra, "4ab26aaa1803daa638910d71075c06386e391147");
     auto contractInput = buildHydraContractInput(100000, 32, std::string("HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq"), 10000000);
 
     Hydra::SigningInput signingInput;
@@ -87,7 +87,7 @@ TEST(Hydra, TestTokenTransactionBuilder){
     
     std::vector<int64_t> amounts = {12545182455, 19152684041};
     auto utxos = buildTestHydraUTXOs(amounts);
-    auto bitcoinSigningInput = buildBitcoinSigningInput(0, 3600, utxos, false, TWCoinTypeHydra);
+    auto bitcoinSigningInput = buildBitcoinSigningInput(0, 3600, utxos, false, TWCoinTypeHydra, "4ab26aaa1803daa638910d71075c06386e391147");
     auto contractInput = buildHydraContractInput(100000, 32, std::string("HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq"), 10000000);
 
 
@@ -131,7 +131,7 @@ TEST(Hydra, TestTransactionSigner){
 TEST(Hydra, TestTokenTransactionSigner){
     std::vector<int64_t> amounts = {12545182455, 19152684041};
     auto utxos = buildTestHydraUTXOs(amounts);
-    auto bitcoinSigningInput = buildBitcoinSigningInput(0, 3600, utxos, false, TWCoinTypeHydra);
+    auto bitcoinSigningInput = buildBitcoinSigningInput(0, 3600, utxos, false, TWCoinTypeHydra, "4ab26aaa1803daa638910d71075c06386e391147");
     auto contractInput = buildHydraContractInput(100000, 32, std::string("HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq"), 10000000);
 
 

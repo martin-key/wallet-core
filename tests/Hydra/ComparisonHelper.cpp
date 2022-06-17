@@ -45,7 +45,7 @@ Bitcoin::UTXOs buildTestHydraUTXOs(const std::vector<int64_t>& amounts) {
     return utxos;
 }
 
-Bitcoin::SigningInput buildBitcoinSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, bool useMaxAmount, enum TWCoinType coin) {
+Bitcoin::SigningInput buildBitcoinSigningInput(Bitcoin::Amount amount, int byteFee, const Bitcoin::UTXOs& utxos, bool useMaxAmount, enum TWCoinType coin, std::string toAddress) {
     Bitcoin::SigningInput input;
     input.amount = amount;
     input.byteFee = byteFee;
@@ -57,7 +57,7 @@ Bitcoin::SigningInput buildBitcoinSigningInput(Bitcoin::Amount amount, int byteF
     input.privateKeys.push_back(privateKey);
 
     input.utxos = utxos;
-    input.toAddress = "HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq";
+    input.toAddress = toAddress;
     input.changeAddress = "hc1qytnqzjknvv03jwfgrsmzt0ycmwqgl0asx9rjk6";
 
     return input;
