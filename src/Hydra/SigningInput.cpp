@@ -12,7 +12,5 @@ using namespace TW::Hydra;
 TW::Hydra::SigningInput::SigningInput(const Proto::SigningInput& input) 
 : input(input.input())
 , contract(input.contract())
-{
-    // input = Bitcoin::SigningInput(input.input());
-    // contract = ContractInput(input.contract());
-}
+, contractCallInput(input.contract_call_input())
+{}

@@ -47,7 +47,7 @@ public:
                 auto lockingScriptOpReturn = Bitcoin::Script::buildOpReturnScript(plan.outputOpReturn);
                 tx.outputs.push_back(Bitcoin::TransactionOutput(0, lockingScriptOpReturn));
             }
-            tx.outputs.push_back(Bitcoin::TransactionOutput(0,plan.contract));
+            tx.outputs.push_back(Bitcoin::TransactionOutput(plan.amount, plan.contract));
 
         }else{
             tx = Bitcoin::TransactionBuilder::build<Bitcoin::Transaction>(plan, toAddress, changeAddress, coin, lockTime);

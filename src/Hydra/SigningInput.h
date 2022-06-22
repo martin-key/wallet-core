@@ -9,6 +9,7 @@
 
 #include "../Bitcoin/SigningInput.h"
 #include "ContractInput.h"
+#include "ContractCallInput.h"
 
 namespace TW::Hydra{
 
@@ -17,6 +18,8 @@ public:
     TW::Bitcoin::SigningInput input;
 
     ContractInput contract;
+
+    ContractCallInput contractCallInput;
 
     SigningInput() = default;
     SigningInput(const Proto::SigningInput& input);

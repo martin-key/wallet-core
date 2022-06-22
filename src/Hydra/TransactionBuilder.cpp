@@ -69,14 +69,22 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
     Bitcoin::TransactionPlan plan;
     auto input = signingInput.input;
     auto contract = signingInput.contract;
-
+    auto contractCallInput = signingInput.contractCallInput;
     bool isTokenTransaction = false;
-
-    if(contract.to != ""){
+    if(contract.to != "" && contractCallInput.functionName == ""){
         isTokenTransaction = true;
         plan.contract = TokenScript::buildTokenScript(contract.gasLimit, contract.to, contract.amount ,input.toAddress);
-    }
+        plan.amount = contract.gasLimit * contract.gasPrice;
 
+    }else if(contractCallInput.functionName != ""){
+        isTokenTransaction = true;
+        plan.contract = TokenScript::buildContractCallScript(contractCallInput.gasLimit, contractCallInput.functionName, contractCallInput.parameters, input.toAddress);
+        plan.amount = contractCallInput.gasLimit * contractCallInput.gasPrice;
+        
+        if(contractCallInput.functionName == "swapExactHYDRAForTokens"){
+            plan.amount += input.amount;
+        }
+    }
     if(!isTokenTransaction){
         plan = Bitcoin::TransactionBuilder::plan(input);
     }else{
@@ -87,9 +95,6 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
             const auto& feeCalculator = Bitcoin::getFeeCalculator(static_cast<TWCoinType>(input.coinType));
             auto inputSelector = Bitcoin::InputSelector<Bitcoin::UTXO>(input.utxos, feeCalculator);
             auto inputSum = Bitcoin::InputSelector<Bitcoin::UTXO>::sum(input.utxos);
-
-            // select UTXOs
-            plan.amount = contract.gasLimit * contract.gasPrice;
 
             // if amount requested is the same or more than available amount, it cannot be satisifed, but
             // treat this case as MaxAmount, and send maximum available (which will be less)
@@ -125,18 +130,21 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
                 plan.availableAmount = Bitcoin::InputSelector<Bitcoin::UTXO>::sum(plan.utxos);
 
                 // Compute fee.
-                // must preliminary set change so that there is a second output
-               
                 assert(plan.amount <= plan.availableAmount);
                 plan.fee = 0;
                 plan.change = plan.availableAmount - plan.amount;
                 
                 plan.fee = estimateSegwitFee(feeCalculator, plan, output_size, signingInput);
                
-                
+                // Check if the contract call is swap, if true get the 
+                if(contractCallInput.functionName == "swapExactHYDRAForTokens"){
+                    plan.amount -= input.amount;
+                }
+
                 plan.fee += plan.amount;
                 
-                plan.amount = 0;
+
+                plan.amount = input.amount;
 
                 assert(plan.fee >= 0 && plan.fee <= plan.availableAmount);
                 

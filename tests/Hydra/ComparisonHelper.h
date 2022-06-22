@@ -30,3 +30,4 @@ bool useMaxAmount = false, enum TWCoinType coin = TWCoinTypeBitcoin, std::string
 
 Hydra::ContractInput buildHydraContractInput(Bitcoin::Amount gasLimit, Bitcoin::Amount gasPrice, const std::string& to, Bitcoin::Amount amount);
 
+Hydra::ContractCallInput buildHydraContractCallInput(Bitcoin::Amount gasLimit, Bitcoin::Amount gasPrice, const std::string& function, std::vector<Hydra::ContractCallParam>& params);

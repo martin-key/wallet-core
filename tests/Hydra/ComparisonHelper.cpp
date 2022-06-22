@@ -81,3 +81,14 @@ int64_t sumHydraUTXOs(const Bitcoin::UTXOs& utxos) {
     return s;
 }
 
+Hydra::ContractCallInput buildHydraContractCallInput(Bitcoin::Amount gasLimit, Bitcoin::Amount gasPrice, const std::string& function, std::vector<Hydra::ContractCallParam>& params){
+    auto contractCallInput = Hydra::ContractCallInput();
+
+    contractCallInput.gasLimit = gasLimit;
+    contractCallInput.gasPrice = gasPrice;
+    contractCallInput.functionName = function;
+    contractCallInput.parameters = params;
+
+    return contractCallInput;
+}
+
