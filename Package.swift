@@ -12,13 +12,13 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "WalletCore",
-            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.42/WalletCore.xcframework.zip",
-            checksum: "6a6c7c5f3422b6d225a067ad90f06c9fd701a488b92d95f21f6e3b32af431b4c"
+            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.43/WalletCore.xcframework.zip",
+            checksum: "c3626db0bd63c302870fa9a14e9f072dacc311e0a95e4b48e3936869d918b59c"
         ),
         .binaryTarget(
             name: "SwiftProtobuf",
-            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.42/SwiftProtobuf.xcframework.zip",
-            checksum: "9ed5408667c3600bdc26ac7a0d189305fd2c013193ee4c9a53cd3ea95772dd24"
+            url: "https://github.com/ValeriD/wallet-core-1/releases/download/2.6.43/SwiftProtobuf.xcframework.zip",
+            checksum: "cd3733f534bb748b95efcab047be394f120b6c002d196c4e8ce1c1d84330acd3"
         )
     ]
 )
