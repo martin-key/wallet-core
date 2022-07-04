@@ -21,7 +21,7 @@
 
 
 
-Bitcoin::Script buildTokenScript(int32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress){
+Bitcoin::Script buildTokenScript(int32_t gasLimit, std::string toAddress, Data amount, std::string contractAddress){
     return Hydra::TokenScript::buildTokenScript(gasLimit, toAddress, amount, contractAddress);
 }
 
@@ -68,7 +68,7 @@ Hydra::ContractInput  buildHydraContractInput(Bitcoin::Amount gasLimit, Bitcoin:
     input.gasLimit = gasLimit;
     input.gasPrice = gasPrice;
     input.to = to;
-    input.amount = amount;
+    input.amount = store(amount);
 
     return input;
 }

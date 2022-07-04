@@ -84,7 +84,7 @@ void insert(Data& script, Data& input){
     append(script, input);
 }
 
-Bitcoin::Script Hydra::TokenScript::buildTokenScript(int64_t gasLimit, const std::string& to, uint64_t amount, const std::string& contractAddress){
+Bitcoin::Script Hydra::TokenScript::buildTokenScript(int64_t gasLimit, const std::string& to, Data& amount, const std::string& contractAddress){
     
     //Build the transaction
     Data script;
@@ -95,12 +95,13 @@ Bitcoin::Script Hydra::TokenScript::buildTokenScript(int64_t gasLimit, const std
     //Convert the gas limit to hex
     Data gasLimitData = numberToBuffer(gasLimit);
 
-
     //Insert the gas limit data
     insert(script, gasLimitData);
 
+    uint256_t amountNumbered = load(amount);
+
     // Building the transfer function
-    Data data = Ethereum::TransactionNonTyped::buildERC20TransferCall(AnyAddress::dataFromString(to,TWCoinTypeHydra), amount);
+    Data data = Ethereum::TransactionNonTyped::buildERC20TransferCall(AnyAddress::dataFromString(to,TWCoinTypeHydra), amountNumbered);
 
     //Insert the encoded data
     insert(script, data);

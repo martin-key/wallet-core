@@ -19,7 +19,7 @@ message ContractInput {
     string to = 3;
 
     // Transaction amount.
-    int64 amount = 4;
+    bytes amount = 4;
 }
 
 message ContractCallParam{

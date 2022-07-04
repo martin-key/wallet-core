@@ -8,6 +8,7 @@
 
 #include<string>
 #include "../Bitcoin/Amount.h"
+#include "../Data.h"
 #include "../proto/Hydra.pb.h"
 
 namespace TW::Hydra{
@@ -20,7 +21,7 @@ public:
 
     std::string to;
     
-    TW::Bitcoin::Amount amount;
+    Data amount;
 
     ContractInput() = default;
 

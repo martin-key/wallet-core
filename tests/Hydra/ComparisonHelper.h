@@ -17,7 +17,7 @@
 
 using namespace TW;
 
-Bitcoin::Script buildTokenScript(int32_t gasLimit, std::string toAddress, uint32_t amount, std::string contractAddress);
+Bitcoin::Script buildTokenScript(int32_t gasLimit, std::string toAddress, Data amount, std::string contractAddress);
 
 /// Build a dummy UTXO with the given amount
 Bitcoin::UTXO buildTestHydraUTXO(int64_t amount);

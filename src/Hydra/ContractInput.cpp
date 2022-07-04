@@ -2,9 +2,10 @@
 
 #include "ContractInput.h"
 
-TW::Hydra::ContractInput::ContractInput(const Proto::ContractInput& input){
+TW::Hydra::ContractInput::ContractInput(const Proto::ContractInput& input)
+{
     gasLimit = input.gas_limit();
     gasPrice = input.gas_price();
     to = input.to();
-    amount = input.amount();
+    amount = Data(input.amount().begin(), input.amount().end());
 }
