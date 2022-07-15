@@ -129,11 +129,7 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
             } else {
                 plan.availableAmount = Bitcoin::InputSelector<Bitcoin::UTXO>::sum(plan.utxos);
 
-                // Compute fee.
-                assert(plan.amount <= plan.availableAmount);
-                plan.fee = 0;
-                plan.change = plan.availableAmount - plan.amount;
-                
+                // Compute fee.                
                 plan.fee = estimateSegwitFee(feeCalculator, plan, output_size, signingInput);
                
                 // Check if the contract call is swap, if true get the 
@@ -146,9 +142,15 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
 
                 plan.amount = input.amount;
 
-                assert(plan.fee >= 0 && plan.fee <= plan.availableAmount);
-                
-                assert(plan.amount >= 0 && plan.amount <= plan.availableAmount);
+                if(plan.fee < 0){
+                    plan.error = Common::Proto::Error_not_enough_utxos;
+                    plan.amount = 0;
+
+                }
+                if(plan.fee > plan.availableAmount){
+                    plan.error = Common::Proto::Error_low_balance;
+                    plan.amount = 0;
+                }
 
                 // compute change
                 plan.change = plan.availableAmount - plan.amount - plan.fee;
