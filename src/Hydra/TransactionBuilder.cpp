@@ -96,21 +96,28 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
             auto inputSelector = Bitcoin::InputSelector<Bitcoin::UTXO>(input.utxos, feeCalculator);
             auto inputSum = Bitcoin::InputSelector<Bitcoin::UTXO>::sum(input.utxos);
 
+            bool maxAmount = false;
             // if amount requested is the same or more than available amount, it cannot be satisifed, but
             // treat this case as MaxAmount, and send maximum available (which will be less)
-            if (plan.amount > inputSum) {
+            if (plan.amount > inputSum && input.amount == 0) {
                 plan.error = Common::Proto::Error_not_enough_utxos;
+            }else if( plan.amount > inputSum){
+                maxAmount = true;
             }
 
             auto extraOutputs = extraOutputCount(input);
             auto output_size = 2;
             Bitcoin::UTXOs selectedInputs;
            
-            output_size = 2 + extraOutputs; // output + change
-            if (input.utxos.size() <= SimpleModeLimit && input.utxos.size() <= Bitcoin::TransactionBuilder::MaxUtxosHardLimit) {
-                selectedInputs = inputSelector.select(plan.amount, input.byteFee, output_size);
-            } else {
-                selectedInputs = inputSelector.selectSimple(plan.amount, input.byteFee, output_size);
+            if(!maxAmount){
+                output_size = 2 + extraOutputs; // output + change
+                if (input.utxos.size() <= SimpleModeLimit && input.utxos.size() <= Bitcoin::TransactionBuilder::MaxUtxosHardLimit) {
+                    selectedInputs = inputSelector.select(plan.amount, input.byteFee, output_size);
+                } else {
+                    selectedInputs = inputSelector.selectSimple(plan.amount, input.byteFee, output_size);
+                }
+            }else {
+                selectedInputs = inputSelector.selectMaxAmount(input.byteFee);
             }
         
             if (selectedInputs.size() <= Bitcoin::TransactionBuilder::MaxUtxosHardLimit) {
@@ -142,7 +149,7 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
 
                 plan.amount = input.amount;
 
-                if(plan.fee < 0){
+                 if(plan.fee < 0){
                     plan.error = Common::Proto::Error_not_enough_utxos;
                     plan.amount = 0;
 
@@ -150,6 +157,14 @@ Bitcoin::TransactionPlan TransactionBuilder::plan(const TW::Hydra::SigningInput&
                 if(plan.fee > plan.availableAmount){
                     plan.error = Common::Proto::Error_low_balance;
                     plan.amount = 0;
+                }
+
+
+                if(!maxAmount){
+                    // reduce amount if needed
+                    plan.amount = std::max(Bitcoin::Amount(0), std::min(plan.amount, plan.availableAmount - plan.fee));
+                }else{
+                    plan.amount = std::max(Bitcoin::Amount(0), plan.availableAmount - plan.fee);
                 }
 
                 // compute change

@@ -162,7 +162,7 @@ TEST(Hydra, TestContractCallTransactionBuilder){
 
     auto contractCallParam2 = Hydra::ContractCallParam();
     contractCallParam2.type = "uint256";
-    contractCallParam2.value.push_back(store(446119696266410));
+    contractCallParam2.value.push_back(store(31697866500));
 
     auto contractCallParam3 = Hydra::ContractCallParam();
     contractCallParam3.type = "address";
@@ -175,7 +175,7 @@ TEST(Hydra, TestContractCallTransactionBuilder){
     std::vector<Hydra::ContractCallParam> params = {contractCallParam2, contractCallParam1, contractCallParam3, contractCallParam4};
 
     auto contractCallInput = buildHydraContractCallInput(250000, 32, "swapExactHYDRAForTokens", params);
-
+    
     Hydra::SigningInput signingInput;
     signingInput.input = bitcoinSigningInput;
     signingInput.contractCallInput = contractCallInput;
@@ -184,13 +184,58 @@ TEST(Hydra, TestContractCallTransactionBuilder){
     auto plan = Hydra::TransactionBuilder::plan(signingInput);
 
     auto transaction = Hydra::TransactionBuilder::build<Bitcoin::Transaction>(plan, "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg", "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg", TWCoinTypeHydra,0);
-    
     {
         ASSERT_EQ(plan.amount, 100000);
         ASSERT_EQ(plan.change, 12536268855);
         ASSERT_EQ(plan.fee, 8813600);
         ASSERT_EQ(plan.utxos.size(), 1);
         ASSERT_EQ(transaction.outputs.size(), 2);
+
+    }
+}
+
+TEST(Hydra, TestContractCallMaxAmountTransactionBuilder){
+    
+    std::vector<int64_t> amounts = {12545182455, 19152684041};
+    auto utxos = buildTestHydraUTXOs(amounts);
+    auto bitcoinSigningInput = buildBitcoinSigningInput(31697866500, 3600, utxos, false, TWCoinTypeHydra, "4ab26aaa1803daa638910d71075c06386e391147");
+
+   auto contractCallParam1 = Hydra::ContractCallParam();
+    contractCallParam1.type = "address[]";
+    contractCallParam1.value.push_back(AnyAddress::dataFromString("HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq", TWCoinTypeHydra));
+    contractCallParam1.value.push_back(AnyAddress::dataFromString("HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq", TWCoinTypeHydra));
+
+    auto contractCallParam2 = Hydra::ContractCallParam();
+    contractCallParam2.type = "uint256";
+    contractCallParam2.value.push_back(store(31697866500));
+
+    auto contractCallParam3 = Hydra::ContractCallParam();
+    contractCallParam3.type = "address";
+    contractCallParam3.value.push_back(AnyAddress::dataFromString("HQMfzgnCPSitwMKFVSnrrdEhNjPXuKV7Hq", TWCoinTypeHydra));
+
+    auto contractCallParam4 = Hydra::ContractCallParam();
+    contractCallParam4.type = "uint256";
+    contractCallParam4.value.push_back(store(20000000000));
+
+    std::vector<Hydra::ContractCallParam> params = {contractCallParam2, contractCallParam1, contractCallParam3, contractCallParam4};
+
+    auto contractCallInput = buildHydraContractCallInput(250000, 32, "swapExactHYDRAForTokens", params);
+    
+    Hydra::SigningInput signingInput;
+    signingInput.input = bitcoinSigningInput;
+    signingInput.contractCallInput = contractCallInput;
+
+
+    auto plan = Hydra::TransactionBuilder::plan(signingInput);
+
+    auto transaction = Hydra::TransactionBuilder::build<Bitcoin::Transaction>(plan, "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg", "HGQWcFAkv4WEC5dyknxrv6ZoPhD3rMCRdg", TWCoinTypeHydra,0);
+    {
+        ASSERT_EQ(plan.amount, 31688520096);
+        ASSERT_EQ(plan.change, 0);
+        ASSERT_EQ(plan.fee, 9346400);
+        ASSERT_EQ(plan.utxos.size(), 2);
+        ASSERT_EQ(transaction.outputs.size(), 1);
+        ASSERT_EQ(plan.error, Common::Proto::SigningError::OK);
 
     }
 }
